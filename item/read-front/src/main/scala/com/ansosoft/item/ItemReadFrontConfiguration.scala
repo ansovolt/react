@@ -1,5 +1,11 @@
 package com.ansosoft.item
 
+import com.typesafe.config.Config
+import pl.newicom.dddd.view.sql.SqlViewStoreConfiguration
+
+import scala.concurrent.duration._
+
+
 trait ItemReadFrontConfiguration extends SqlViewStoreConfiguration {
 
   def config: Config

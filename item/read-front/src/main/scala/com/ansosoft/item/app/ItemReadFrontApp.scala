@@ -1,20 +1,20 @@
 package com.ansosoft.item.app
 
-import com.ansosoft.item.ItemReadFrontConfiguration
-import com.ansosoft.item.HttpService
+
+import akka.kernel.Bootable
+import com.ansosoft.item.{ItemReadFrontConfiguration,HttpService}
+import com.typesafe.config.Config
 
 class ItemReadFrontApp extends Bootable {
-   val config = ConfigFactory.load()
-   val system = ActorSystem("sales-read-front", config)
 
-   def startup() = {
-     new ItemReadFrontConfiguration {
-       override def config: Config = ItemReadFrontApp.this.config
-       system.actorOf(HttpService.props(interface, port, askTimeout), "http-service")
-     }
-   }
+  override def systemName = "item-read-front"
 
-   def shutdown() = {
-     system.terminate()
-   }
- }
+  def startup() = {
+    new ItemReadFrontConfiguration {
+      override def config: Config = ItemReadFrontApp.this.config
+      import httpService._
+      system.actorOf(HttpService.props(interface, port, askTimeout), "http-service")
+    }
+  }
+
+}

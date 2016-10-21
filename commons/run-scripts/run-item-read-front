@@ -1,0 +1,4 @@
+#!/bin/bash
+
+../../item/read-front/target/universal/stage/bin/item-read-front
+

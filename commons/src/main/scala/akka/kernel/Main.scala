@@ -10,11 +10,21 @@ import java.net.URLClassLoader
 import java.util.jar.JarFile
 
 import akka.actor.ActorSystem
+import com.typesafe.config.{Config, ConfigFactory}
+import org.slf4j.LoggerFactory._
 
-import scala.collection.immutable
 import scala.collection.JavaConverters._
-
+import scala.collection.immutable
 trait Bootable {
+
+  def systemName = "ecommerce"
+
+  lazy val log = getLogger(getClass.getName)
+
+  lazy val config: Config = ConfigFactory.load()
+
+  implicit lazy val system = ActorSystem(systemName, config)
+
   /**
     * Callback run on microkernel startup.
     * Create initial actors and messages here.
@@ -25,8 +35,12 @@ trait Bootable {
     * Callback run on microkernel shutdown.
     * Shutdown actor systems here.
     */
-  def shutdown(): Unit
+  def shutdown(): Unit = {
+    system.terminate()
+  }
+
 }
+
 
 object Main {
   private val quiet = getBoolean("akka.kernel.quiet")

@@ -1,12 +1,28 @@
 package com.ansosoft.item
 
+import akka.actor.{Actor, ActorLogging, Props}
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Directives
+import pl.newicom.dddd.streams.ImplicitMaterializer
+import akka.util.Timeout
+import com.ansosoft.item.app.ReservationViewEndpoint
+import com.typesafe.config.Config
+import org.json4s.Formats
+import pl.newicom.dddd.serialization.JsonSerHints._
+
+import scala.concurrent.duration.FiniteDuration
+import slick.driver.PostgresDriver
+
+
 object HttpService {
   def props(interface: String, port: Int, askTimeout: FiniteDuration): Props =
     Props(new HttpService(interface, port)(askTimeout))
 }
 
 class HttpService(interface: String, port: Int)(implicit askTimeout: Timeout) extends Actor with ActorLogging
-  with SalesReadFrontConfiguration with ImplicitMaterializer with Directives {
+  with ItemReadFrontConfiguration with ImplicitMaterializer with Directives {
+
+  import context.dispatcher
 
   implicit val formats: Formats = fromConfig(config)
   implicit val profile = PostgresDriver

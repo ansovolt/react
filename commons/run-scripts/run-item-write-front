@@ -1,0 +1,4 @@
+#!/bin/bash
+
+../../item/write-front/target/universal/stage/bin/item-write-front
+

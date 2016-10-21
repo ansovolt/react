@@ -1,0 +1,14 @@
+#!/bin/bash
+
+LOGS="../../target"
+
+touch ${LOGS}/item-read-back.log 
+touch ${LOGS}/item-read-front.log
+touch ${LOGS}/item-write-back.log
+touch ${LOGS}/item-write-front.log
+
+
+./run-item-read-back > ${LOGS}/item-read-back.log 2>&1 &
+./run-item-read-front > ${LOGS}/item-read-front.log 2>&1 &
+./run-item-write-back > ${LOGS}/item-write-back.log 2>&1 &
+./run-item-write-front > ${LOGS}/item-write-front.log 2>&1 &

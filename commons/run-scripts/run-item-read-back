@@ -1,0 +1,4 @@
+#!/bin/bash
+
+../../item/read-back/target/universal/stage/bin/item-read-back
+

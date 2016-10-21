@@ -1,0 +1,4 @@
+#!/bin/bash
+
+../../item/write-back/target/universal/stage/bin/item-write-back
+

@@ -1,5 +1,7 @@
 package com.ansosoft.item.view
 
+import java.sql.Date
+
 import com.ansosoft.item.ReservationStatus._
 import com.ansosoft.item._
 import org.joda.time.DateTime.now
