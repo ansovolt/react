@@ -5,12 +5,12 @@ import sbt.Keys._
 
 lazy val item = (project in file(".")).aggregate( `item-read-front`,`item-read-back`)
 
-//lazy val `sales-contracts` = (project in file("contracts"))
-//  .settings(
-//    libraryDependencies += AkkaDDD.messaging
-//  )
-//
-//
+lazy val `item-contracts` = (project in file("contracts"))
+  .settings(
+    libraryDependencies += AkkaDDD.messaging
+  )
+
+
 //lazy val `sales-write-back` = (project in file("wriΩe-back"))
 //  .settings(
 //    dockerExposedPorts := Seq(9101),

@@ -13,15 +13,11 @@ sourcesInBase in ThisBuild := false
 
 lazy val root = project.settings(
   aggregate in update := false
-)
-  .aggregate(item)
+).aggregate(item)
 
 lazy val commons = project
-lazy val monitoring = project.dependsOn(commons)
-
 
 lazy val item = project.dependsOn(commons)
-lazy val `e2e-tests` = project
 
 
 // Rebuilds and restarts current application (or whole system if called from root project)

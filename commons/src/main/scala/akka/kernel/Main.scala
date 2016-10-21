@@ -9,6 +9,8 @@ import java.lang.Boolean.getBoolean
 import java.net.URLClassLoader
 import java.util.jar.JarFile
 
+import akka.actor.ActorSystem
+
 import scala.collection.immutable
 import scala.collection.JavaConverters._
 

@@ -10,7 +10,7 @@ import slick.driver.{JdbcProfile, PostgresDriver}
 class ItemViewUpdateApp extends Bootable {
 
   private val config = ConfigFactory.load()
-  val system = ActorSystem("sales-view-update", config)
+  val system = ActorSystem("item-view-update", config)
 
   def startup() = {
     implicit val profile: JdbcProfile = PostgresDriver
