@@ -20,6 +20,7 @@ lazy val commons = project
 lazy val item = project.dependsOn(commons)
 
 
+
 // Rebuilds and restarts current application (or whole system if called from root project)
 addCommandAlias("redeploy", ";clean;docker:stage;restart")
 addCommandAlias("redeployQuick", ";docker:stage;restart")
