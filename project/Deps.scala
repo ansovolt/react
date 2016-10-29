@@ -2,6 +2,10 @@ import sbt._
 
 object Deps {
 
+  object Util {
+    val clapper = "org.clapper" %% "classutil" % "1.0.11"
+  }
+
   object Version {
     val akka        =    "2.4.2"
     val akkaDDD     =    "1.2.3-SNAPSHOT"

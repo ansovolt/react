@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory._
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable
+
+import scala.collection.JavaConversions._
+//import org.clapper.classutil.ClassFinder
+
 trait Bootable {
 
   def systemName = "ecommerce"
@@ -60,8 +64,25 @@ object Main {
     log("Starting Akka...")
     log("Running Akka " + ActorSystem.Version)
 
+    //val cp  = Option(System.getProperty("mainClass"))
+    log("#########ENV########")
+    val environmentVars = System.getenv()
+    for ((k,v) <- environmentVars) println(s"key: $k, value: $v")
+
+    val properties = System.getProperties()
+    for ((k,v) <- properties) println(s"key: $k, value: $v")
+
+//    val finder = ClassFinder()
+//    val classes = finder.getClasses // classes is an Iterator[ClassInfo]
+//    classes.foreach(println)
+
+    log("#########ENV########")
+
     val classLoader = createClassLoader()
     Thread.currentThread.setContextClassLoader(classLoader)
+
+
+
 
     val bootClasses = immutable.Seq(monitoringRunnerClass, mainClass).flatten
     val bootables = bootClasses map { c ⇒ classLoader.loadClass(c).newInstance.asInstanceOf[Bootable] }

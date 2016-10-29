@@ -1,7 +1,7 @@
 import sbt.Keys._
 
 
-organization in ThisBuild := "pl.newicom"
+organization in ThisBuild := "com.ansosoft"
 
 version in ThisBuild := "0.3.0-SNAPSHOT"
 
@@ -11,13 +11,16 @@ scalacOptions in ThisBuild := Seq("-encoding", "utf8", "-feature", "-language:po
 
 sourcesInBase in ThisBuild := false
 
+
 lazy val root = project.settings(
   aggregate in update := false
-).aggregate(item)
+).aggregate(commons, persistence,item,headquarters)
 
 lazy val commons = project
-
 lazy val item = project.dependsOn(commons)
+lazy val persistence = project
+lazy val headquarters = project.dependsOn(commons)
+
 
 
 

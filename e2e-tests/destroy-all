@@ -1,7 +1,15 @@
 #!/bin/bash
 
+source common
+
 function destroy {
-  vagrant destroy -f $1 &
+  docker  destroy -f $1 &
+  
+  docker $(cfg) stop ${WILDFLY_SPARK_HADOOP_CONTAINER} &>/dev/null || true
+	docker $(cfg) rm ${WILDFLY_SPARK_HADOOP_CONTAINER} &>/dev/null || true
+	docker $(cfg) run -d --link ${RABBITMQ_CONTAINER}:${RABBITMQ} --link ${REDIS_CONTAINER}:${REDIS} --link ${POSTGRES_CONTAINER}:${POSTGRES} --name ${WILDFLY_SPARK_HADOOP_CONTAINER} -p 8080:8080 -p 8787:8787 -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/wildfly/logs:/opt/jboss/wildfly/standalone/log -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/wildfly/deployments:/opt/jboss/wildfly/standalone/deployments -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/spark:/spark ${WILDFLY_SPARK_HADOOP_TAGGED_IMAGE}
+	
+  
 }
 
 destroy item-read-front
@@ -10,7 +18,7 @@ destroy item-read-back
 #destroy item-write-back
 
 while true; do
-	if docker ps | grep -e "item\|ecommerce-view-store|ecommerce-eventstore"; then
+	if docker ps | grep -e "item|view-store|eventstore"; then
 		sleep 0.3
 	else
 		break

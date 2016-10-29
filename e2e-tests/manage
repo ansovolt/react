@@ -1,0 +1,136 @@
+#!/bin/bash
+
+DOCKER_HOST_NAME="hqr-dev-2-virtualbox"
+eval "$(docker-machine env ${DOCKER_HOST_NAME})"
+DOCKER_IP=$(docker-machine ip ${DOCKER_HOST_NAME})
+
+#docker rmi -f event-store:0.3.0-SNAPSHOT
+
+function destroy {
+	echo "Destroying container $1"
+    CONTAINER=$1
+	docker stop ${CONTAINER} &>/dev/null || true
+	docker rm ${CONTAINER} &>/dev/null || true
+}
+
+function start_event_store {
+	CONTAINER="event-store-c"
+	IMAGE="event-store:0.3.0-SNAPSHOT"
+	
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	docker run -d --name ${CONTAINER} -p 2113:2113 -p 1113:1113 ${IMAGE}
+	#docker run -d --link ${RABBITMQ_CONTAINER}:${RABBITMQ} --link ${REDIS_CONTAINER}:${REDIS} --link ${POSTGRES_CONTAINER}:${POSTGRES} --name ${WILDFLY_SPARK_HADOOP_CONTAINER} -p 8080:8080 -p 8787:8787 -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/wildfly/logs:/opt/jboss/wildfly/standalone/log -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/wildfly/deployments:/opt/jboss/wildfly/standalone/deployments -v ${LINK_ROOT_VOLUME_MOUNT_DIR}/spark:/spark ${WILDFLY_SPARK_HADOOP_TAGGED_IMAGE}	
+	
+	sleep 5
+	
+	IP=${DOCKER_IP}
+	echo "Enabling projections using IP: ${IP}"
+
+	echo "curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$by_category/command/enable'"
+	curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$by_category/command/enable'
+	
+	echo "curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$by_event_type/command/enable'"
+	curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$by_event_type/command/enable'
+
+	echo "curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$stream_by_category/command/enable'"
+	curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$stream_by_category/command/enable'
+
+	echo "curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$streams/command/enable'"
+	curl -v -u admin:changeit --data '' 'http://192.168.99.100:2113/projection/$streams/command/enable'
+			
+			
+	echo "Creating user projections using IP: ${IP}"
+	
+	echo "http -a admin:changeit http://${IP}:2113/projections/continuous name==clock_proj type==JS emit==1 < ../headquarters/write-back/src/main/resources/projections/clock.js"
+	http -a admin:changeit http://192.168.99.100:2113/projections/continuous name==clock_proj type==JS emit==1 < ../headquarters/write-back/src/main/resources/projections/clock.js
+	http -a admin:changeit http://192.168.99.100:2113/projections/continuous name==current_deadlines_proj type==JS emit==1 < ../headquarters/write-back/src/main/resources/projections/current-deadlines.js
+	http -a admin:changeit http://192.168.99.100:2113/projections/continuous name==order_process_proj type==JS emit==1 < ../headquarters/write-back/src/main/resources/projections/order-process.js
+	
+}
+
+function start_view_store {
+	CONTAINER="view-store-c"
+	IMAGE="view-store:0.3.0-SNAPSHOT"
+	
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} -p 5434:5432 ${IMAGE}"
+	docker run -d --name ${CONTAINER} -p 5434:5432 ${IMAGE}
+	
+}
+
+function start_headquarter_write_back {
+	CONTAINER="headquarter-write-back-c"
+	IMAGE="headquarter-write-back:0.3.0-SNAPSHOT"
+	
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} -p 9401:9401 ${IMAGE}"
+	docker run -d --name ${CONTAINER} -p 9401:9401 ${IMAGE}
+	
+}
+	
+
+function start_item_read_front {
+	CONTAINER="item-read-front-c"
+	IMAGE="item-read-front:0.3.0-SNAPSHOT"
+	
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} -p 9110:9110 ${IMAGE}"
+	docker run -d --name ${CONTAINER} -p 9110:9110 ${IMAGE}
+	
+}
+	
+function start_item_read_back {
+	CONTAINER="item-read-back-c"
+	IMAGE="item-read-back:0.3.0-SNAPSHOT"
+	
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} ${IMAGE}"
+	docker run -d --name ${CONTAINER} ${IMAGE}
+	
+}
+	
+
+function start_item_write_back {
+	CONTAINER="item-write-back-c"
+	IMAGE="item-write-back:0.3.0-SNAPSHOT"
+
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} -p 9101:9101 ${IMAGE}"
+	docker run -d --name ${CONTAINER} -p 9101:9101 ${IMAGE}
+
+}
+
+function start_item_write_front {
+	CONTAINER="item-write-front-c"
+	IMAGE="item-write-front:0.3.0-SNAPSHOT"
+
+	echo "Starting container $CONTAINER from image $IMAGE"
+	destroy ${CONTAINER}
+	echo "Running container $CONTAINER from image $IMAGE"
+	echo "docker run -d --name ${CONTAINER} -p 9100:9100 ${IMAGE}"
+	docker run -d --name ${CONTAINER} -p 9100:9100 ${IMAGE}
+
+}
+
+
+
+
+#start_view_store
+#start_event_store
+#start_headquarter_write_back
+#start_item_read_back
+#start_item_read_front
+
+start_item_write_back
