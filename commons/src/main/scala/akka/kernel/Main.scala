@@ -27,6 +27,10 @@ trait Bootable {
 
   lazy val config: Config = ConfigFactory.load()
 
+  //println("------------------------------------")
+  //println(config.toString)
+  //println("------------------------------------")
+
   implicit lazy val system = ActorSystem(systemName, config)
 
   /**
@@ -65,18 +69,12 @@ object Main {
     log("Running Akka " + ActorSystem.Version)
 
     //val cp  = Option(System.getProperty("mainClass"))
-    log("#########ENV########")
-    val environmentVars = System.getenv()
-    for ((k,v) <- environmentVars) println(s"key: $k, value: $v")
-
-    val properties = System.getProperties()
-    for ((k,v) <- properties) println(s"key: $k, value: $v")
-
-//    val finder = ClassFinder()
-//    val classes = finder.getClasses // classes is an Iterator[ClassInfo]
-//    classes.foreach(println)
-
-    log("#########ENV########")
+    //log("#########ENV########")
+    //val environmentVars = System.getenv()
+    //for ((k,v) <- environmentVars) println(s"key: $k, value: $v")
+    //val properties = System.getProperties()
+    //for ((k,v) <- properties) println(s"key: $k, value: $v")
+    //log("#########ENV########")
 
     val classLoader = createClassLoader()
     Thread.currentThread.setContextClassLoader(classLoader)

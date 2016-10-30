@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+DOCKER_HOST_NAME="default"
+eval "$(docker-machine env ${DOCKER_HOST_NAME})"
+DOCKER_IP=$(docker-machine ip ${DOCKER_HOST_NAME})
+
+echo "Create reservation"
+echo 'http ${IP}:9100/ecommerce/item Accept:text/plain Command-Type:ecommerce.item.CreateReservation reservationId="r1" customerId="customer-1"'
+http 192.168.99.100:9100/ecommerce/item Accept:text/plain Command-Type:ecommerce.item.CreateReservation reservationId="r1" customerId="customer-1"

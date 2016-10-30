@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOCKER_HOST_NAME="hqr-dev-2-virtualbox"
+DOCKER_HOST_NAME="default"
 eval "$(docker-machine env ${DOCKER_HOST_NAME})"
 DOCKER_IP=$(docker-machine ip ${DOCKER_HOST_NAME})
 
@@ -129,8 +129,15 @@ function start_item_write_front {
 
 #start_view_store
 #start_event_store
+
+
 #start_headquarter_write_back
 #start_item_read_back
 #start_item_read_front
 
 start_item_write_back
+start_item_write_front
+
+
+
+

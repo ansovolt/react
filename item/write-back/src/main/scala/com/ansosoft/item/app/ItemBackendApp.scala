@@ -10,9 +10,9 @@ import pl.newicom.dddd.office.OfficeFactory.office
 class ItemBackendApp extends Bootable with ItemBackendConfiguration {
 
   override def startup() = {
-    Cluster(system).registerOnMemberUp {
-      office[Reservation]
-    }
+//    Cluster(system).registerOnMemberUp {
+//      office[Reservation]
+//    }
   }
 
 }
