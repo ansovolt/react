@@ -1,6 +1,8 @@
+
+<!--
 <configuration>
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <encoder>
             <pattern>%gray(%X{akkaTimestamp}) %highlight(%-5level) %cyan(%X{akkaSource}) - %msg%n</pattern>
         </encoder>
@@ -15,4 +17,22 @@
         <appender-ref ref="console"/>
     </root>
 
+</configuration>       -->
+
+
+
+<configuration>
+<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>log/log.log</file>
+    <append>true</append>
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+        <pattern>%d,%msg%n</pattern>
+    </encoder>
+</appender>
+
+<root level="DEBUG">
+    <appender-ref ref="FILE" />
+</root>
 </configuration>
